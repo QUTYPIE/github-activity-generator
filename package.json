@@ -1,0 +1,14 @@
+{
+  "name": "github-activity-generator",
+  "version": "1.0.0",
+  "description": "A simple GitHub activity generator",
+  "main": "activityGenerator.js",
+  "scripts": {
+    "generate": "node activityGenerator.js"
+  },
+  "dependencies": {
+    "simple-git": "^3.10.0"
+  },
+  "author": "NICK-FURY-6023",
+  "license": "ISC"
+}
