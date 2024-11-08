@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require("path");
 
 // Configuration
-const DAYS = 120;             // Number of days to go back
-const COMMITS_PER_DAY = 200;   // Number of commits per day
+const DAYS = 5;             // Number of days to go back
+const COMMITS_PER_DAY = 5;   // Number of commits per day
 const FILE_NAME = "activity.txt"; // File to change for each commit
 
 const git = simpleGit();
