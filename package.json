@@ -7,7 +7,7 @@
     "generate": "node activityGenerator.js"
   },
   "dependencies": {
-    "simple-git": "^3.10.0"
+    "simple-git": "^3.27.0"
   },
   "author": "NICK-FURY-6023",
   "license": "ISC"
