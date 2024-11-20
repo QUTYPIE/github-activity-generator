@@ -4,7 +4,7 @@ const path = require("path");
 
 // Configuration
 const DAYS = 1;             // Number of days to go back
-const COMMITS_PER_DAY = 1500;   // Number of commits per day
+const COMMITS_PER_DAY = 1000;   // Number of commits per day
 const FILE_NAME = "activity.txt"; // File to change for each commit
 
 const git = simpleGit();
