@@ -112,7 +112,7 @@ npm run generate
 
 2. **Add your GitHub repository as the remote origin**:
    ```bash
-   git remote add origin https://github.com/NICK-FURY-6023/YOUR_REPOSITORY_NAME.git
+   git remote add origin https://github.com/NICK-FURY-6023/github-activity-generator.git
    ```
 
 ### Step 7: Push the Commits to GitHub
