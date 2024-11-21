@@ -3,9 +3,9 @@ const fs = require("fs");
 const path = require("path");
 
 // Configuration
-const DAYS = 1;              // Number of days to go back
-const COMMITS_PER_DAY = 1200; // Number of commits per day
-const FILE_NAME = "activity.asm"; // File to change for each commit
+const DAYS = 2;              // Number of days to go back
+const COMMITS_PER_DAY = 800; // Number of commits per day
+const FILE_NAME = "activity.cc"; // File to change for each commit
 const SRC_DIR = path.join(__dirname, "src");
 
 // Ensure the `src` directory exists
