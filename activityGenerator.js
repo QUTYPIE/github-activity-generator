@@ -5,8 +5,8 @@ const path = require("path");
 // Configuration
 const DAYS = 2;              // Number of days to go back
 const COMMITS_PER_DAY = 800; // Number of commits per day
-const FILE_NAME = "activity.css; // File to change for each commit
-const SRC_DIR = path.join(__dirname, "src/lanunagefiles");
+const FILE_NAME = "lanunages.css"; // File to change for each commit
+const SRC_DIR = path.join(__dirname, "src/database/Activity");
 
 // Ensure the `src` directory exists
 if (!fs.existsSync(SRC_DIR)) {
