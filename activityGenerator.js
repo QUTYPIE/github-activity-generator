@@ -5,7 +5,7 @@ const path = require("path");
 // Configuration
 const DAYS = 2;              // Number of days to go back
 const COMMITS_PER_DAY = 800; // Number of commits per day
-const FILE_NAME = "lanunages.ms"; // File to change for each commit
+const FILE_NAME = "lanunages.ncl"; // File to change for each commit
 const SRC_DIR = path.join(__dirname, "src/database");
 
 // Ensure the `src` directory exists
