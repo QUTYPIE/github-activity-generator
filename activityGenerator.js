@@ -1,11 +1,11 @@
 const simpleGit = require("simple-git");
 const fs = require("fs");
 const path = require("path");
+const { FILE_NAME } = require("./FILE_NAME");
 
 // Configuration
 const DAYS = 1;              // Number of days to go back
 const COMMITS_PER_DAY = 1000; // Number of commits per day
-const FILE_NAME = "SATSDB.php"; // File to change for each commit
 const SRC_DIR = path.join(__dirname, "src/DATADB");
 
 // Ensure the `src` directory exists
