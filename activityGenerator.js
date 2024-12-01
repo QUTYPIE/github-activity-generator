@@ -5,8 +5,8 @@ const { FILE_NAME } = require("./FILE_NAME");
 
 // Configuration
 const DAYS = 1;              // Number of days to go back
-const COMMITS_PER_DAY = 1000; // Number of commits per day
-const SRC_DIR = path.join(__dirname, "src/DATADB");
+const COMMITS_PER_DAY = 2000; // Number of commits per day
+const SRC_DIR = path.join(__dirname, "src/DATAOB");
 
 // Ensure the `src` directory exists
 if (!fs.existsSync(SRC_DIR)) {
