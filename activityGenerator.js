@@ -1,11 +1,12 @@
 const simpleGit = require("simple-git");
 const fs = require ("fs");
 const path = require("path");
-const { FILE_NAME } = require("./FILE_NAME");
+// const { FILE_NAME } = require("./FILE_NAME");
 
 // Configuration
 const DAYS = 1;              // Number of days to go back
-const COMMITS_PER_DAY = 2000; // Number of commits per day
+const COMMITS_PER_DAY = 20; // Number of commits per day
+const FILE_NAME = "activity.txt"; // File to change for each commit
 const SRC_DIR = path.join(__dirname, "src/DATAOB");
 
 // Ensure the `src` directory exists
