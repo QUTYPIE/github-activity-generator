@@ -2,9 +2,9 @@
   "name": "github-activity-generator",
   "version": "1.0.0",
   "description": "A simple GitHub activity generator",
-  "main": "activityGenerator.js",
+  "main": "index.js",
   "scripts": {
-    "generate": "node activityGenerator.js"
+    "generate": "node index.js"
   },
   "dependencies": {
     "simple-git": "^3.27.0"
