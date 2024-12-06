@@ -1,18 +1,16 @@
 const simpleGit = require("simple-git");
-const fs = require ("fs");
+const fs = require("fs");
 const path = require("path");
- const { FILE_NAME } = require("./FILE_NAME");
+const { FILE_NAME } = require("./FILE_NAME"); // Ensure this file exists and exports `FILE_NAME`
 
 // Configuration
-
 const DAYS = 1;              // Number of days to go back
 const COMMITS_PER_DAY = 1000; // Number of commits per day
-//const FILE_NAME = "activity.rust"; // File to change for each commit
-const SRC_DIR = path.join(__dirname, "src/DATAOB");
+const SRC_DIR = path.join(__dirname, "src/main/database/formart");
 
 // Ensure the `src` directory exists
 if (!fs.existsSync(SRC_DIR)) {
-  fs.mkdirSync(SRC_DIR);
+  fs.mkdirSync(SRC_DIR, { recursive: true });
 }
 
 const git = simpleGit();
@@ -21,7 +19,7 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
 (async () => {
   try {
     const filePath = path.join(SRC_DIR, FILE_NAME);
-    
+
     // Ensure the file exists
     if (!fs.existsSync(filePath)) {
       fs.writeFileSync(filePath, "GitHub Activity Generator\n");
@@ -33,24 +31,26 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
 
       for (let commit = 0; commit < COMMITS_PER_DAY; commit++) {
         const dateString = getFormattedDate(commitDate);
+        const commitMessage = `Day ${day + 1}, Commit ${commit + 1}: Generated on ${dateString}`;
 
         // Append content to the file
         fs.appendFileSync(filePath, `Commit for ${dateString}\n`);
 
         // Stage and commit changes
         await git.add(filePath);
-        await git.commit(`Commit on ${dateString}`, filePath, { "--date": dateString });
+        await git.commit(commitMessage, filePath, { "--date": dateString });
 
         // Add a small delay to avoid overlapping Git processes
         await new Promise((resolve) => setTimeout(resolve, 50));
 
-        console.log(`Committed: ${dateString}`);
+        console.log(`Committed: ${commitMessage}`);
       }
     }
 
     console.log("All commits generated successfully!");
   } catch (error) {
     console.error("Error during execution:", error.message);
+    console.error(error.stack);
     console.error("Ensure no other Git processes are running.");
   }
 })();
