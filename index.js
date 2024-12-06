@@ -31,7 +31,10 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
 
       for (let commit = 0; commit < COMMITS_PER_DAY; commit++) {
         const dateString = getFormattedDate(commitDate);
-        const commitMessage = `Day ${day + 1}, Commit ${commit + 1}: Generated on ${dateString}`;
+
+        // Epic Commit Message
+        const commitMessage = `💻 Forge #${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ, the Architect of Digital Realms 🛠️ - Time Stamped: ${dateString}`;
+
 
         // Append content to the file
         fs.appendFileSync(filePath, `Commit for ${dateString}\n`);
@@ -47,7 +50,7 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
       }
     }
 
-    console.log("All commits generated successfully!");
+    console.log("All commits generated successfully by the Legendary Developer!");
   } catch (error) {
     console.error("Error during execution:", error.message);
     console.error(error.stack);
