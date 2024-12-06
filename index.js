@@ -33,7 +33,7 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
         const dateString = getFormattedDate(commitDate);
 
         // Epic Commit Message
-        const commitMessage = `💻 Forge #${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ, the Architect of Digital Realms 🛠️ - Time Stamped: ${dateString}`;
+        const commitMessage = `💻  #${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped: ${dateString}`;
 
 
         // Append content to the file
@@ -50,7 +50,7 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
       }
     }
 
-    console.log("All commits generated successfully by the Legendary Developer!");
+    console.log("All commits generated successfully by the ₦ł₵₭ ₣ɄⱤɎ Legendary Developer!");
   } catch (error) {
     console.error("Error during execution:", error.message);
     console.error(error.stack);
