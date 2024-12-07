@@ -37,7 +37,7 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
 
 
         // Append content to the file
-        fs.appendFileSync(filePath, `Commit for ${dateString}\n`);
+        fs.appendFileSync(filePath, `Commit by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped ${dateString}\n`);
 
         // Stage and commit changes
         await git.add(filePath);
