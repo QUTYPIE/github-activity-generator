@@ -1,3 +1,3 @@
-const FILE_NAME = "legacy.swift"; // File to change for each commit
+const FILE_NAME = "legacy.pro"; // File to change for each commit
 
 exports.FILE_NAME = FILE_NAME;
