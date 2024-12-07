@@ -33,7 +33,7 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
         const dateString = getFormattedDate(commitDate);
 
         // Epic Commit Message
-        const commitMessage = `💻  #${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped: ${dateString}`;
+        const commitMessage = `  #${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped: ${dateString}`;
 
 
         // Append content to the file
