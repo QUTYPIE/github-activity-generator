@@ -53,18 +53,20 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
 
         // Generate structured, programming-centric content for the file
         const content = `
-/**
- * 🚀 Git Activity Log
- * Author: ₦ł₵₭ ₣ɄⱤɎ 🛠️
- * Commit #: ${commit + 1}
- * Timestamp: ${dateString}
- * 
- * Update Summary:
- * - Codebase optimization in progress...
- * - Contributions written with ❤️ and executed with precision.
- * 
+
+  🚀 Git Activity Log
+  Author: ₦ł₵₭ ₣ɄⱤɎ 🛠️
+  Commit #: ${commit + 1}
+  Timestamp: ${dateString}
+  
+  Update Summary:
+   Codebase optimization in progress...
+   Contributions written with ❤️ and executed with precision.
+  
  * 💡 Developer Thought: "Write code as if the next developer to maintain it is a violent psychopath who knows where you live."
- */
+ 
+ //{---------------------------------------------------------]
+  [----------------------------------------------------------]
 
 console.log("🚀 Commit Log: Mission Success - Timestamp: ${dateString}");
 console.log("✨ Lines of Innovation Added By ₦ł₵₣ɄⱤɎ 🛠️");
