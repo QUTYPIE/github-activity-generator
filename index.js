@@ -45,11 +45,12 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
         const dateString = getFormattedDate(commitDate);
 
         // Construct a dynamic, programming-themed commit message
-        const commitMessage = `
+        const commitMessage = ```py
+        
 🔧 Commit #${commit + 1} 🚀 by ₦ł₵₭ ₣ɄⱤɎ 
 🕒 Timestamp: ${dateString}
 📖 "Refactored life and committed to excellence. One line at a time."
-        `;
+        ```;
 
         // Generate structured, programming-centric content for the file
         const content = `
@@ -65,8 +66,8 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
   
  * 💡 Developer Thought: "Write code as if the next developer to maintain it is a violent psychopath who knows where you live."
  
- //{---------------------------------------------------------]
-  [----------------------------------------------------------]
+ //[---------------------------------------------------------]
+   [---------------------------------------------------------]
 
 console.log("🚀 Commit Log: Mission Success - Timestamp: ${dateString}");
 console.log("✨ Lines of Innovation Added By ₦ł₵₣ɄⱤɎ 🛠️");
