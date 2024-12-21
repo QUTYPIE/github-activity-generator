@@ -45,8 +45,8 @@ const getFormattedDate = (date) => date.toISOString().replace("T", " ").substrin
         const dateString = getFormattedDate(commitDate);
 
         // Construct a dynamic, programming-themed commit message
-        const commitMessage = ```py
-        
+        const commitMessage = ```python
+
 🔧 Commit #${commit + 1} 🚀 by ₦ł₵₭ ₣ɄⱤɎ 
 🕒 Timestamp: ${dateString}
 📖 "Refactored life and committed to excellence. One line at a time."
