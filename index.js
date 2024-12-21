@@ -81,7 +81,7 @@ console.log("✨ Lines of Innovation Added By ₦ł₵₣ɄⱤɎ 🛠️");
           console.error(`❌ Git error on commit #${commit + 1}:`, gitError.message);
         }
 
-        console.log(`✅ Committed: Commit #${commit + 1}  by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped at ${dateString}`);
+        console.log(`✅ Committed: Commit #${commit + 1}  by ₦ł₵₭ ₣ɄⱤɎ 🛠️  Time Stamped at ${dateString}`);
 
         // Add a small delay to avoid overlapping Git processes
         await new Promise((resolve) => setTimeout(resolve, 50));
