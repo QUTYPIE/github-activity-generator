@@ -5,7 +5,7 @@ const path = require("path");
 // Configuration
 const DAYS = 1; // Number of days to go back
 const COMMITS_PER_DAY = 1000; // Number of commits per day
-const SRC_DIR = path.join(__dirname, "src/main/database"); // Directory path
+const SRC_DIR = path.join(__dirname, "src/main/database/format/lanDB"); // Directory path
 
 // Ensure the `src` directory exists
 if (!fs.existsSync(SRC_DIR)) {
@@ -19,7 +19,7 @@ const git = simpleGit();
 const getFormattedDate = (date) => date.toISOString().replace("T", " ").substring(0, 19);
 
 // Generate a unique file name for this execution
-const FILE_NAME = `file_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.txt`;
+const FILE_NAME = `file_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.r`;
 const filePath = path.join(SRC_DIR, FILE_NAME);
 
 (async () => {
