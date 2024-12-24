@@ -4,7 +4,7 @@ const path = require("path");
 
 // Configuration
 const DAYS = 1; // Number of days to go back
-const COMMITS_PER_DAY = 10; // Number of commits per day (reduced for testing)
+const COMMITS_PER_DAY = 1000; // Number of commits per day
 const SRC_DIR = path.join(__dirname, "src/main/database"); // Directory path
 
 // Ensure the `src` directory exists
@@ -18,15 +18,27 @@ const git = simpleGit();
 // Helper function to format date
 const getFormattedDate = (date) => date.toISOString().replace("T", " ").substring(0, 19);
 
-// Helper function to generate a random file name
-const generateRandomFileName = () => {
-  const timestamp = Date.now();
-  const randomString = Math.random().toString(36).substring(2, 8); // Alphanumeric random string
-  return `file_${timestamp}_${randomString}.txt`;
-};
+// Generate a unique file name for this execution
+const FILE_NAME = `file_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.txt`;
+const filePath = path.join(SRC_DIR, FILE_NAME);
 
 (async () => {
   try {
+    // Create a new file at the start of the script
+    const initialContent = `
+/**
+ * Git Activity Log
+ * Author: ₦ł₵₭ ₣ɄⱤɎ 🛠️
+ * Timestamp: ${getFormattedDate(new Date())}
+ * 
+ * Update Summary:
+ * - File created at the start of the script execution.
+ * - All commits for this run will be stored here.
+ */
+`;
+    fs.writeFileSync(filePath, initialContent);
+    console.log(`✅ Created new file: ${filePath}`);
+
     for (let day = 0; day < DAYS; day++) {
       const commitDate = new Date();
       commitDate.setDate(commitDate.getDate() - day);
@@ -34,24 +46,16 @@ const generateRandomFileName = () => {
       for (let commit = 0; commit < COMMITS_PER_DAY; commit++) {
         const dateString = getFormattedDate(commitDate);
 
-        // Generate a new file name for each commit
-        const FILE_NAME = generateRandomFileName();
-        const filePath = path.join(SRC_DIR, FILE_NAME);
-
         // Append detailed content to the file
         const detailedLog = `
 /**
- * Git Activity Log
- * Author: ₦ł₵₭ ₣ɄⱤɎ 🛠️
  * Commit #: ${commit + 1}
  * Timestamp: ${dateString}
  * 
- * Update Summary:
  * 💡 Developer Thought: "Write code as if the next developer to maintain it is a violent psychopath who knows where you live."
  */
 `;
-        fs.writeFileSync(filePath, detailedLog);
-        console.log(`✅ Created new file: ${filePath}`);
+        fs.appendFileSync(filePath, detailedLog);
 
         // Construct commit message
         const commitMessage = `Commit #: ${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped: ${dateString}`;
