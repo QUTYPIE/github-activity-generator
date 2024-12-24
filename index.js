@@ -1,6 +1,7 @@
 const simpleGit = require("simple-git");
 const fs = require("fs");
 const path = require("path");
+const moment = require("moment-timezone");
 
 // Configuration
 const DAYS = 1; // Number of days to go back
@@ -15,11 +16,34 @@ if (!fs.existsSync(SRC_DIR)) {
 
 const git = simpleGit();
 
-// Helper function to format date
-const getFormattedDate = (date) => date.toISOString().replace("T", " ").substring(0, 19);
+// Helper functions
+const formatTime12Hour = (date) => {
+  const hours = date.hours();
+  const minutes = date.minutes().toString().padStart(2, "0");
+  const seconds = date.seconds().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12; // Convert to 12-hour format, 0 becomes 12
+  return `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+};
+
+const getFormattedDateTime = (date) => {
+  const datePart = date.format("YYYY-MM-DD"); // YYYY-MM-DD
+  const timePart = formatTime12Hour(date);
+  return `${datePart} ${timePart}`;
+};
+
+const getCurrentDayName = (date) => date.format("dddd"); // Get the full day name (e.g., "Monday")
+
+const getFormattedFileName = (date) => {
+  const dayName = getCurrentDayName(date);
+  const dateTime = date.format("YYYY-MM-DD"); // YYYY-MM-DD
+  const timePart = formatTime12Hour(date).replace(/:/g, "-").replace(" ", "_");
+  return `${dayName}_${dateTime}_${timePart}.r`;
+};
 
 // Generate a unique file name for this execution
-const FILE_NAME = `file_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.r`;
+const currentDate = moment.tz("Asia/Kolkata"); // Set the timezone to Kolkata (India)
+const FILE_NAME = getFormattedFileName(currentDate);
 const filePath = path.join(SRC_DIR, FILE_NAME);
 
 (async () => {
@@ -29,7 +53,7 @@ const filePath = path.join(SRC_DIR, FILE_NAME);
 /**
  * Git Activity Log
  * Author: ₦ł₵₭ ₣ɄⱤɎ 🛠️
- * Timestamp: ${getFormattedDate(new Date())}
+ * Timestamp: ${getFormattedDateTime(currentDate)}
  * 
  * Update Summary:
  * - File created at the start of the script execution.
@@ -40,11 +64,11 @@ const filePath = path.join(SRC_DIR, FILE_NAME);
     console.log(`✅ Created new file: ${filePath}`);
 
     for (let day = 0; day < DAYS; day++) {
-      const commitDate = new Date();
-      commitDate.setDate(commitDate.getDate() - day);
+      const commitDate = moment.tz("Asia/Kolkata");
+      commitDate.subtract(day, 'days');
 
       for (let commit = 0; commit < COMMITS_PER_DAY; commit++) {
-        const dateString = getFormattedDate(commitDate);
+        const dateString = getFormattedDateTime(commitDate);
 
         // Append detailed content to the file
         const detailedLog = `
