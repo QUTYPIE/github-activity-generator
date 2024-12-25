@@ -1,15 +1,13 @@
 {
   "name": "github-activity-generator",
   "version": "1.0.0",
-  "description": "A simple GitHub activity generator",
-  "main": "index.js",
+  "description": "GitHub activity generator with commit logs.",
+  "main": "index.js", // Ensure this file exists
   "scripts": {
-    "generate": "node index.js"
+    "start": "node index.js"
   },
   "dependencies": {
-    "moment-timezone": "^0.5.46",
-    "simple-git": "^3.27.0"
-  },
-  "author": "NICK-FURY-6023",
-  "license": "ISC"
+    "moment-timezone": "^0.5.34",
+    "simple-git": "^3.17.0"
+  }
 }
