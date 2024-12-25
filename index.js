@@ -6,7 +6,7 @@ const moment = require("moment-timezone");
 // Configuration
 const CONFIG = {
   DAYS: 1, // Number of days to go back
-  COMMITS_PER_DAY: 10, // Number of commits per day
+  COMMITS_PER_DAY: 1000, // Number of commits per day
   SRC_DIR: path.join(__dirname, "src/main/database/format/lanDB"), // Directory path
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
@@ -35,7 +35,7 @@ const generateFileName = (date) => {
   const dayName = date.format("dddd"); // Day of the week
   const datePart = date.format("YYYY-MM-DD");
   const timePart = date.format("hh-mm-ss_A");
-  return `${dayName}_${datePart}_${timePart}.log`;
+  return `${dayName}_${datePart}_${timePart}.ejs`;
 };
 
 // Write the header to the file with borders
