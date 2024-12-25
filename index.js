@@ -6,7 +6,7 @@ const moment = require("moment-timezone");
 // Configuration
 const CONFIG = {
   DAYS: 1, // Number of days to go back
-  COMMITS_PER_DAY: 1000, // Number of commits per day
+  COMMITS_PER_DAY: 5000, // Number of commits per day
   SRC_DIR: path.join(__dirname, "src/main/database/format/lanDB"), // Directory path
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
