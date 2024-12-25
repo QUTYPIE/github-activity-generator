@@ -1,7 +1,7 @@
-const simpleGit = require("simple-git");
-const fs = require("fs");
-const path = require("path");
-const moment = require("moment-timezone");
+import simpleGit from "simple-git";
+import fs from "fs";
+import path from "path";
+import moment from "moment-timezone";
 
 // Configuration
 const CONFIG = {

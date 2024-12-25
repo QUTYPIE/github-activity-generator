@@ -11,6 +11,5 @@
     "simple-git": "^3.27.0"
   },
   "author": "NICK-FURY-6023",
-  "license": "ISC",
-  "type": "module"
+  "license": "ISC"
 }
