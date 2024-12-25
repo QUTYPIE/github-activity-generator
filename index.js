@@ -4,103 +4,119 @@ const path = require("path");
 const moment = require("moment-timezone");
 
 // Configuration
-const DAYS = 3; // Number of days to go back
-const COMMITS_PER_DAY = 100; // Number of commits per day
-const SRC_DIR = path.join(__dirname, "src/main/database/format/lanDB"); // Directory path
+const CONFIG = {
+  DAYS: 1, // Number of days to go back
+  COMMITS_PER_DAY: 10, // Number of commits per day
+  SRC_DIR: path.join(__dirname, "src/main/database/format/lanDB"), // Directory path
+  TIMEZONE: "Asia/Kolkata", // Timezone
+  DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
+};
 
-// Ensure the `src` directory exists
-if (!fs.existsSync(SRC_DIR)) {
-  fs.mkdirSync(SRC_DIR, { recursive: true });
-  console.log(`✅ Created directory: ${SRC_DIR}`);
+// Ensure the directory exists
+if (!fs.existsSync(CONFIG.SRC_DIR)) {
+  fs.mkdirSync(CONFIG.SRC_DIR, { recursive: true });
+  console.log(`✅ Directory created: ${CONFIG.SRC_DIR}`);
 }
 
 const git = simpleGit();
 
-// Helper functions
-const formatTime12Hour = (date) => {
-  const hours = date.hours();
-  const minutes = date.minutes().toString().padStart(2, "0");
-  const seconds = date.seconds().toString().padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12; // Convert to 12-hour format, 0 becomes 12
-  return `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+// Helper: Format timestamp in 12-hour format with AM/PM
+const formatTime = (date) => date.format("YYYY-MM-DD hh:mm:ss A");
+
+// Helper: Convert a string into binary representation
+const stringToBinary = (text) =>
+  text
+    .split("")
+    .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
+    .join(" ");
+
+// Helper: Generate a random developer thought
+const generateRandomThought = () => {
+  const thoughts = [
+    "Write code as if the next developer is a violent psychopath who knows where you live.",
+    "Fix one bug, create three more. Such is life.",
+    "Keep it simple, but significant.",
+    "Always code as if the guy who ends up maintaining your code will be a sociopath.",
+    "Code is read more often than it is written. Write accordingly.",
+    "Make it work, make it right, make it fast.",
+    "If debugging is the process of removing software bugs, then programming must be the process of putting them in.",
+    "Documentation is like sex. When it is good, it is very, very good. When it is bad, it is better than nothing.",
+    "There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies. The other way is to make it so complicated that there are no obvious deficiencies.",
+  ];
+  return thoughts[Math.floor(Math.random() * thoughts.length)];
 };
 
-const getFormattedDateTime = (date) => {
-  const datePart = date.format("YYYY-MM-DD"); // YYYY-MM-DD
-  const timePart = formatTime12Hour(date);
-  return `${datePart} ${timePart}`;
+// Helper: Generate a file name
+const generateFileName = (date) => {
+  const dayName = date.format("dddd"); // Day of the week
+  const datePart = date.format("YYYY-MM-DD");
+  const timePart = date.format("hh-mm-ss_A");
+  return `${dayName}_${datePart}_${timePart}.log`;
 };
 
-const getCurrentDayName = (date) => date.format("dddd"); // Get the full day name (e.g., "Monday")
-
-const getFormattedFileName = (date) => {
-  const dayName = getCurrentDayName(date);
-  const dateTime = date.format("YYYY-MM-DD"); // YYYY-MM-DD
-  const timePart = formatTime12Hour(date).replace(/:/g, "-").replace(" ", "_");
-  return `${dayName}_${dateTime}_${timePart}.ejs`;
+// Write the header to the file with borders
+const writeHeader = (filePath) => {
+  const header = `
++-----------+---------------------+--------------------------------------------------------+-------------------------------------------+----------------------+
+| Commit #  | Timestamp           | Developer Thought                                      | Binary Representation                     | Developer Name       |
++-----------+---------------------+--------------------------------------------------------+-------------------------------------------+----------------------+\n`;
+  fs.writeFileSync(filePath, header, { flag: "w" });
 };
 
-// Generate a unique file name for this execution
-const currentDate = moment.tz("Asia/Kolkata"); // Set the timezone to Kolkata (India)
-const FILE_NAME = getFormattedFileName(currentDate);
-const filePath = path.join(SRC_DIR, FILE_NAME);
+// Append a commit row to the file with borders
+const appendCommitRow = (filePath, commitNumber, timestamp, thought) => {
+  const binaryRepresentation = stringToBinary(thought).substring(0, 50) + "..."; // Limit binary length for readability
+  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${thought.padEnd(55)} | ${binaryRepresentation.padEnd(41)} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`;
+  fs.appendFileSync(filePath, row);
+};
 
+// Write the footer with the bottom border
+const writeFooter = (filePath) => {
+  const footer = `+-----------+---------------------+--------------------------------------------------------+-------------------------------------------+----------------------+\n`;
+  fs.appendFileSync(filePath, footer);
+};
+
+// Main execution
 (async () => {
   try {
-    // Create a new file at the start of the script
-    const initialContent = `
-/**
- * Git Activity Log
- * Author: ₦ł₵₭ ₣ɄⱤɎ 🛠️
- * Timestamp: ${getFormattedDateTime(currentDate)}
- * 
- * Update Summary:
- * - File created at the start of the script execution.
- * - All commits for this run will be stored here.
- */
-`;
-    fs.writeFileSync(filePath, initialContent);
-    console.log(`✅ Created new file: ${filePath}`);
+    const currentDate = moment.tz(CONFIG.TIMEZONE);
+    const fileName = generateFileName(currentDate);
+    const filePath = path.join(CONFIG.SRC_DIR, fileName);
 
-    for (let day = 0; day < DAYS; day++) {
-      const commitDate = moment.tz("Asia/Kolkata");
-      commitDate.subtract(day, 'days');
+    // Write the header to the log file
+    writeHeader(filePath);
+    console.log(`✅ Log file initialized: ${filePath}`);
 
-      for (let commit = 0; commit < COMMITS_PER_DAY; commit++) {
-        const dateString = getFormattedDateTime(commitDate);
+    for (let day = 0; day < CONFIG.DAYS; day++) {
+      const commitDate = moment.tz(CONFIG.TIMEZONE).subtract(day, "days");
 
-        // Append detailed content to the file
-        const detailedLog = `
-/**
- * Commit #: ${commit + 1}
- * Timestamp: ${dateString}
- * 
- * 💡 Developer Thought: "Write code as if the next developer to maintain it is a violent psychopath who knows where you live."
- */
-`;
-        fs.appendFileSync(filePath, detailedLog);
+      for (let commit = 0; commit < CONFIG.COMMITS_PER_DAY; commit++) {
+        const timestamp = formatTime(commitDate);
+        const thought = generateRandomThought(); // Generate a random thought
 
-        // Construct commit message
-        const commitMessage = `Commit #: ${commit + 1} by ₦ł₵₭ ₣ɄⱤɎ 🛠️ - Time Stamped: ${dateString}`;
+        // Append the commit to the log file
+        appendCommitRow(filePath, commit + 1, timestamp, thought);
+
+        const commitMessage = `Commit #: ${commit + 1} - ${timestamp}`;
 
         try {
           // Stage and commit changes
           await git.add(filePath);
-          await git.commit(commitMessage, filePath, { "--date": dateString });
-          console.log(`✅ Committed: ${commitMessage}`);
-        } catch (gitError) {
-          console.error(`❌ Git error on commit #${commit + 1}:`, gitError.message);
+          await git.commit(commitMessage, filePath, { "--date": timestamp });
+          console.log(`✅ Commit created: ${commitMessage}`);
+        } catch (error) {
+          console.error(`❌ Git error on commit #${commit + 1}:`, error.message);
         }
 
-        // Add a small delay to avoid overlapping Git processes
+        // Delay to avoid overlapping Git processes
         await new Promise((resolve) => setTimeout(resolve, 50));
       }
     }
 
-    console.log("✨ All commits generated successfully by the ₦ł₵₭ ₣ɄⱤɎ Legendary Developer! ✨");
+    // Write the footer to the log file
+    writeFooter(filePath);
+    console.log("✨ All commits successfully logged!");
   } catch (error) {
     console.error("❌ Error during execution:", error.message);
-    console.error(error.stack);
   }
 })();
