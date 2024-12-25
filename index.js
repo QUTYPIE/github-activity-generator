@@ -6,7 +6,7 @@ const moment = require("moment-timezone");
 // Configuration
 const CONFIG = {
   DAYS: 1, // Number of days to go back
-  COMMITS_PER_DAY: 1000, // Number of commits per day
+  COMMITS_PER_DAY: 10, // Number of commits per day
   SRC_DIR: path.join(__dirname, "src/main/database/format/lanDB"), // Directory path
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
@@ -30,49 +30,34 @@ const stringToBinary = (text) =>
     .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
     .join(" ");
 
-// Helper: Generate a random developer thought
-const generateRandomThought = () => {
-  const thoughts = [
-    "Write code as if the next developer is a violent psychopath who knows where you live.",
-    "Fix one bug, create three more. Such is life.",
-    "Keep it simple, but significant.",
-    "Always code as if the guy who ends up maintaining your code will be a sociopath.",
-    "Code is read more often than it is written. Write accordingly.",
-    "Make it work, make it right, make it fast.",
-    "If debugging is the process of removing software bugs, then programming must be the process of putting them in.",
-    "Documentation is like sex. When it is good, it is very, very good. When it is bad, it is better than nothing.",
-    "There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies. The other way is to make it so complicated that there are no obvious deficiencies.",
-  ];
-  return thoughts[Math.floor(Math.random() * thoughts.length)];
-};
-
 // Helper: Generate a file name
 const generateFileName = (date) => {
   const dayName = date.format("dddd"); // Day of the week
   const datePart = date.format("YYYY-MM-DD");
   const timePart = date.format("hh-mm-ss_A");
-  return `${dayName}_${datePart}_${timePart}.ejs`;
+  return `${dayName}_${datePart}_${timePart}.log`;
 };
 
 // Write the header to the file with borders
 const writeHeader = (filePath) => {
   const header = `
-+-----------+---------------------+--------------------------------------------------------+-------------------------------------------+----------------------+
-| Commit #  | Timestamp           | Developer Thought                                      | Binary Representation                     | Developer Name       |
-+-----------+---------------------+--------------------------------------------------------+-------------------------------------------+----------------------+\n`;
++-----------+---------------------+-------------------------------------------+----------------------+
+| Commit #  | Timestamp           | Binary Representation                     | Developer Name       |
++-----------+---------------------+-------------------------------------------+----------------------+\n`;
   fs.writeFileSync(filePath, header, { flag: "w" });
 };
 
 // Append a commit row to the file with borders
-const appendCommitRow = (filePath, commitNumber, timestamp, thought) => {
+const appendCommitRow = (filePath, commitNumber, timestamp) => {
+  const thought = "Random commit message"; // Placeholder for any text
   const binaryRepresentation = stringToBinary(thought).substring(0, 50) + "..."; // Limit binary length for readability
-  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${thought.padEnd(55)} | ${binaryRepresentation.padEnd(41)} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`;
+  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${binaryRepresentation.padEnd(41)} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`;
   fs.appendFileSync(filePath, row);
 };
 
 // Write the footer with the bottom border
 const writeFooter = (filePath) => {
-  const footer = `+-----------+---------------------+--------------------------------------------------------+-------------------------------------------+----------------------+\n`;
+  const footer = `+-----------+---------------------+-------------------------------------------+----------------------+\n`;
   fs.appendFileSync(filePath, footer);
 };
 
@@ -92,10 +77,9 @@ const writeFooter = (filePath) => {
 
       for (let commit = 0; commit < CONFIG.COMMITS_PER_DAY; commit++) {
         const timestamp = formatTime(commitDate);
-        const thought = generateRandomThought(); // Generate a random thought
 
         // Append the commit to the log file
-        appendCommitRow(filePath, commit + 1, timestamp, thought);
+        appendCommitRow(filePath, commit + 1, timestamp);
 
         const commitMessage = `Commit #: ${commit + 1} - ${timestamp}`;
 
