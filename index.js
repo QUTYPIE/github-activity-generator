@@ -4,7 +4,7 @@ const path = require("path");
 const moment = require("moment-timezone");
 
 // Configuration
-const DAYS = 0; // Number of days to go back
+const DAYS = 3; // Number of days to go back
 const COMMITS_PER_DAY = 100; // Number of commits per day
 const SRC_DIR = path.join(__dirname, "src/main/database/format/lanDB"); // Directory path
 
