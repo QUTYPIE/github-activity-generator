@@ -38,7 +38,7 @@ const getFormattedFileName = (date) => {
   const dayName = getCurrentDayName(date);
   const dateTime = date.format("YYYY-MM-DD"); // YYYY-MM-DD
   const timePart = formatTime12Hour(date).replace(/:/g, "-").replace(" ", "_");
-  return `${dayName}_${dateTime}_${timePart}.r`;
+  return `${dayName}_${dateTime}_${timePart}.ejs`;
 };
 
 // Generate a unique file name for this execution
