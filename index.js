@@ -35,7 +35,7 @@ const generateFileName = (date) => {
   const dayName = date.format("dddd"); // Day of the week
   const datePart = date.format("YYYY-MM-DD");
   const timePart = date.format("hh-mm-ss_A");
-  return `${dayName}_${datePart}_${timePart}.java`;
+  return `${dayName}_${datePart}_${timePart}.c`;
 };
 
 // Write the header to the file with borders
