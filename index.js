@@ -7,15 +7,15 @@ const moment = require("moment-timezone");
 const CONFIG = {
   DAYS: 1, // Number of days to go back
   COMMITS_PER_DAY: 1000, // Number of commits per day
-  SRC_DIR: path.join(__dirname, "src/main/database/format/lanDB"), // Directory path
+  BASE_DIR: path.join(__dirname, "logs"), // Base directory for all logs
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
 };
 
-// Ensure the directory exists
-if (!fs.existsSync(CONFIG.SRC_DIR)) {
-  fs.mkdirSync(CONFIG.SRC_DIR, { recursive: true });
-  console.log(`✅ Directory created: ${CONFIG.SRC_DIR}`);
+// Ensure the base directory exists
+if (!fs.existsSync(CONFIG.BASE_DIR)) {
+  fs.mkdirSync(CONFIG.BASE_DIR, { recursive: true });
+  console.log(`✅ Base directory created: ${CONFIG.BASE_DIR}`);
 }
 
 const git = simpleGit();
@@ -30,12 +30,17 @@ const stringToBinary = (text) =>
     .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
     .join(" ");
 
-// Helper: Generate a file name
-const generateFileName = (date) => {
+// Helper: Generate a folder name based on current date
+const generateFolderName = (date) => {
   const dayName = date.format("dddd"); // Day of the week
   const datePart = date.format("YYYY-MM-DD");
+  return `${dayName}_${datePart}`;
+};
+
+// Helper: Generate a file name
+const generateFileName = (date) => {
   const timePart = date.format("hh-mm-ss_A");
-  return `${dayName}_${datePart}_${timePart}.c`;
+  return `${timePart}.c`;
 };
 
 // Write the header to the file with borders
@@ -65,8 +70,17 @@ const writeFooter = (filePath) => {
 (async () => {
   try {
     const currentDate = moment.tz(CONFIG.TIMEZONE);
+    const folderName = generateFolderName(currentDate);
+    const folderPath = path.join(CONFIG.BASE_DIR, folderName);
+
+    // Ensure today's folder exists
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
+      console.log(`✅ Folder created: ${folderPath}`);
+    }
+
     const fileName = generateFileName(currentDate);
-    const filePath = path.join(CONFIG.SRC_DIR, fileName);
+    const filePath = path.join(folderPath, fileName);
 
     // Write the header to the log file
     writeHeader(filePath);
