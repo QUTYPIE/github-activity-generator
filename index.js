@@ -7,23 +7,23 @@ const chalk = require("chalk");
 // Configuration
 const CONFIG = {
   DAYS: 1, // Number of days to go back
-  COMMITS_PER_DAY: 50, // Number of commits per day
+  COMMITS_PER_DAY: 1000, // Number of commits per day
   BASE_DIR: path.join(__dirname, "src/main/base"), // Base directory
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
-  LOG_FORMAT: "md", // File format: txt, json, md
 };
-
-// Ensure the base directory exists
-if (!fs.existsSync(CONFIG.BASE_DIR)) {
-  fs.mkdirSync(CONFIG.BASE_DIR, { recursive: true });
-  console.log(chalk.green(`✅ Base directory created: ${CONFIG.BASE_DIR}`));
-}
 
 const git = simpleGit();
 
 // Helper: Format timestamp in 12-hour format with AM/PM
 const formatTime = (date) => date.format("YYYY-MM-DD hh:mm:ss A");
+
+// Helper: Convert a string into binary representation
+const stringToBinary = (text) =>
+  text
+    .split("")
+    .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
+    .join(" ");
 
 // Helper: Generate a folder name based on current date
 const generateFolderName = (date) => {
@@ -48,7 +48,7 @@ const writeHeader = (filePath) => {
 
 // Append a commit row to the file with borders
 const appendCommitRow = (filePath, commitNumber, timestamp, commitMessage) => {
-  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${commitMessage.padEnd(41)} | Developer Name       |\n`;
+  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${commitMessage.padEnd(41)} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`;
   fs.appendFileSync(filePath, row);
 };
 
