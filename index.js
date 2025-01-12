@@ -6,9 +6,19 @@ const chalk = require("chalk");
 
 // Configuration
 const CONFIG = {
-  TIMEZONE: "Asia/Kolkata", // Your timezone
-  BASE_DIR: path.join(__dirname, "src/main/base"), // Directory for logs
+  DAYS: 1, // Number of days to go back
+  COMMITS_PER_DAY: 50, // Number of commits per day
+  BASE_DIR: path.join(__dirname, "src/main/base"), // Base directory
+  TIMEZONE: "Asia/Kolkata", // Timezone
+  DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
+  LOG_FORMAT: "md", // File format: txt, json, md
 };
+
+// Ensure the base directory exists
+if (!fs.existsSync(CONFIG.BASE_DIR)) {
+  fs.mkdirSync(CONFIG.BASE_DIR, { recursive: true });
+  console.log(chalk.green(`✅ Base directory created: ${CONFIG.BASE_DIR}`));
+}
 
 const git = simpleGit();
 
