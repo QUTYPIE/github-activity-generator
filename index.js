@@ -7,23 +7,23 @@ const chalk = require("chalk");
 // Configuration
 const CONFIG = {
   DAYS: 1, // Number of days to go back
-  COMMITS_PER_DAY: 20, // Reduced number of commits per day to a more reasonable amount
+  COMMITS_PER_DAY: 1000, // Number of commits per day
   BASE_DIR: path.join(__dirname, "src/main/base"), // Base directory
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
+  LOG_FORMAT: "md", // File format: txt, json, md
 };
+
+// Ensure the base directory exists
+if (!fs.existsSync(CONFIG.BASE_DIR)) {
+  fs.mkdirSync(CONFIG.BASE_DIR, { recursive: true });
+  console.log(chalk.green(`✅ Base directory created: ${CONFIG.BASE_DIR}`));
+}
 
 const git = simpleGit();
 
 // Helper: Format timestamp in 12-hour format with AM/PM
 const formatTime = (date) => date.format("YYYY-MM-DD hh:mm:ss A");
-
-// Helper: Convert a string into binary representation
-const stringToBinary = (text) =>
-  text
-    .split("")
-    .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
-    .join(" ");
 
 // Helper: Generate a folder name based on current date
 const generateFolderName = (date) => {
@@ -35,86 +35,40 @@ const generateFolderName = (date) => {
 // Helper: Generate a file name
 const generateFileName = (date) => {
   const timePart = date.format("hh-mm-ss_A");
-  return `${timePart}.swift`;
+  return `${timePart}.${CONFIG.LOG_FORMAT}`;
 };
 
-// Write the header to the file with borders
+// Write header for Markdown
 const writeHeader = (filePath) => {
-  const header = `+-----------+---------------------+-------------------------------------------+----------------------+ 
-| Commit #  | Timestamp           | Commit Message                           | Developer Name       | 
-+-----------+---------------------+-------------------------------------------+----------------------+ \n`;
-  fs.writeFileSync(filePath, header, { flag: "w" });
+  const header =
+    CONFIG.LOG_FORMAT === "md"
+      ? `| Commit # | Timestamp           | Developer Name       |\n|----------|---------------------|----------------------|\n`
+      : "";
+  if (header) fs.writeFileSync(filePath, header, { flag: "w" });
 };
 
-// Append a commit row to the file with borders
-const appendCommitRow = (filePath, commitNumber, timestamp, commitMessage) => {
-  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${commitMessage.padEnd(41)} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`;
-  fs.appendFileSync(filePath, row);
+// Append a commit row to the log file
+const appendCommitRow = (filePath, commitNumber, timestamp) => {
+  const row =
+    CONFIG.LOG_FORMAT === "md"
+      ? `| ${commitNumber.toString().padEnd(8)} | ${timestamp.padEnd(
+          21
+        )} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`
+      : "";
+  if (row) fs.appendFileSync(filePath, row);
 };
 
-// Write the footer with the bottom border
+// Write footer for Markdown
 const writeFooter = (filePath) => {
-  const footer = `+-----------+---------------------+-------------------------------------------+----------------------+ \n`;
-  fs.appendFileSync(filePath, footer);
-};
-
-// Helper to analyze changes and generate commit messages
-const generateCommitMessages = async () => {
-  try {
-    const status = await git.status();
-    const messages = [];
-
-    if (status.modified.length > 0) {
-      console.log(chalk.blue("\n📄 Files modified:"));
-      status.modified.forEach((file) => {
-        const extension = path.extname(file);
-
-        let message = "";
-        if (extension === ".js") message = `Refactored JavaScript logic in ${file}`;
-        else if (extension === ".json") message = `Updated configuration in ${file}`;
-        else if (extension === ".swift") message = `Improved Swift code in ${file}`;
-        else message = `Updated file: ${file}`;
-
-        messages.push(message);
-        console.log(` - ${file} -> ${message}`);
-      });
-    }
-
-    if (status.not_added.length > 0) {
-      console.log(chalk.yellow("\n📄 Files added:"));
-      status.not_added.forEach((file) => {
-        const message = `Added new file: ${file}`;
-        messages.push(message);
-        console.log(` - ${file} -> ${message}`);
-      });
-    }
-
-    if (status.deleted.length > 0) {
-      console.log(chalk.red("\n📄 Files deleted:"));
-      status.deleted.forEach((file) => {
-        const message = `Deleted file: ${file}`;
-        messages.push(message);
-        console.log(` - ${file} -> ${message}`);
-      });
-    }
-
-    if (messages.length === 0) {
-      console.log(chalk.green("\n✅ No significant changes detected."));
-    }
-
-    return messages;
-  } catch (error) {
-    console.error(chalk.red("❌ Error analyzing changes:"), error.message);
-    return [];
+  if (CONFIG.LOG_FORMAT === "md") {
+    const footer = `|----------|---------------------|----------------------|\n`;
+    fs.appendFileSync(filePath, footer);
   }
 };
 
-// Main function to automate commits
+// Main execution
 (async () => {
   try {
-    console.log(chalk.green("\n🔍 Starting commit process..."));
-
-    // Get current date and time
     const currentDate = moment.tz(CONFIG.TIMEZONE);
     const folderName = generateFolderName(currentDate);
     const folderPath = path.join(CONFIG.BASE_DIR, folderName);
@@ -132,34 +86,36 @@ const generateCommitMessages = async () => {
     writeHeader(filePath);
     console.log(chalk.green(`✅ Log file initialized: ${filePath}`));
 
-    // Analyze changes and generate commit messages
-    const messages = await generateCommitMessages();
+    for (let day = 0; day < CONFIG.DAYS; day++) {
+      const commitDate = moment.tz(CONFIG.TIMEZONE).subtract(day, "days");
 
-    if (messages.length > 0) {
-      // Stage all changes
-      await git.add("./*");
-      console.log(chalk.green("\n✅ All changes staged."));
+      for (let commit = 0; commit < CONFIG.COMMITS_PER_DAY; commit++) {
+        const timestamp = formatTime(commitDate);
+        const commitMessage = `Automated Commit #: ${commit + 1} - ${timestamp}`;
 
-      // Create a single meaningful commit
-      const commitMessage = messages.join(" | ");
-      await git.commit(commitMessage);
-      console.log(chalk.green("\n✨ Commit created with message:"));
-      console.log(chalk.yellow(`   ${commitMessage}`));
+        // Append commit row to log file
+        appendCommitRow(filePath, commit + 1, timestamp);
 
-      // Write commit details to the log file
-      const timestamp = formatTime(currentDate);
-      appendCommitRow(filePath, 1, timestamp, commitMessage);
+        try {
+          // Stage and commit changes
+          await git.add(filePath);
+          await git.commit(commitMessage, filePath, { "--date": timestamp });
+          console.log(chalk.blue(`✅ Commit created: ${commitMessage}`));
+        } catch (error) {
+          console.error(
+            chalk.red(`❌ Git error on commit #${commit + 1}:`, error.message)
+          );
+        }
 
-      // Write footer to the log file
-      writeFooter(filePath);
-
-      // Push to repository
-      await git.push();
-      console.log(chalk.green("\n🚀 Changes pushed to the repository!"));
-    } else {
-      console.log(chalk.blue("\n🌟 No changes to commit."));
+        // Delay to avoid overlapping Git processes
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
     }
+
+    // Write footer to log file
+    writeFooter(filePath);
+    console.log(chalk.yellow("✨ All commits successfully logged!"));
   } catch (error) {
-    console.error(chalk.red("❌ Error during commit process:"), error.message);
+    console.error(chalk.red("❌ Error during execution:", error.message));
   }
 })();
