@@ -35,7 +35,7 @@ const generateFolderName = (date) => {
 // Helper: Generate a file name
 const generateFileName = (date) => {
   const timePart = date.format("hh-mm-ss_A");
-  return `${timePart}.log`;
+  return `${timePart}.swift`;
 };
 
 // Write the header to the file with borders
