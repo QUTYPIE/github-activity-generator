@@ -89,6 +89,15 @@ const generateCommitMessages = async () => {
       });
     }
 
+    if (status.deleted.length > 0) {
+      console.log(chalk.red("\n📄 Files deleted:"));
+      status.deleted.forEach((file) => {
+        const message = `Deleted file: ${file}`;
+        messages.push(message);
+        console.log(` - ${file} -> ${message}`);
+      });
+    }
+
     if (messages.length === 0) {
       console.log(chalk.green("\n✅ No significant changes detected."));
     }
