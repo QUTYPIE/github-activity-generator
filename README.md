@@ -1,5 +1,22 @@
 Here's a complete guide with everything you need to set up and run a GitHub activity generator in JavaScript, from start to finish.
 
+---
+<!-- Stats -->
+  <section>
+    <h2>📊 Stats</h2>
+    <img src="https://github-readme-stats.vercel.app/api?username=nick-fury-6023&show_icons=true&theme=radical" alt="GitHub Stats">
+    <img src="https://github-readme-streak-stats.herokuapp.com?user=nick-fury-6023&theme=radical" alt="GitHub Streak">
+    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=nick-fury-6023&layout=compact&theme=radical" alt="Top Languages">
+  </section>
+  
+![My Activity](https://github-readme-activity-graph.vercel.app/graph?username=NICK-FURY-6023&bg_color=21232...)
+
+----
+<p align="center">
+  <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" alt="Random Fun GIF">
+</p>
+
+
 ### Step 1: Create the Project Folder
 
 1. Open a terminal or command prompt.
