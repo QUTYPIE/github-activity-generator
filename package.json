@@ -7,7 +7,7 @@
     "generate": "node index.js"
   },
   "dependencies": {
-    "chalk": "^5.4.1",
+    "chalk": "^4.1.2",
     "moment-timezone": "^0.5.46",
     "simple-git": "^3.27.0"
   },
