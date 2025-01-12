@@ -7,7 +7,7 @@ const chalk = require("chalk");
 // Configuration
 const CONFIG = {
   DAYS: 1, // Number of days to go back
-  COMMITS_PER_DAY: 1000, // Number of commits per day
+  COMMITS_PER_DAY: 20, // Reduced number of commits per day to a more reasonable amount
   BASE_DIR: path.join(__dirname, "src/main/base"), // Base directory
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
