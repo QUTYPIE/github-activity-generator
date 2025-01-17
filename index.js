@@ -25,7 +25,7 @@ const git = simpleGit();
 // Helper: Format timestamp in 12-hour format with AM/PM
 const formatTime = (date) => date.format("YYYY-MM-DD hh:mm:ss A");
 
-// Helper: Generate a folder name based on current date
+// Helper: Generate a folder name based on the current date
 const generateFolderName = (date) => {
   const dayName = date.format("dddd"); // Day of the week
   const datePart = date.format("YYYY-MM-DD");
@@ -97,6 +97,12 @@ const writeFooter = (filePath) => {
         appendCommitRow(filePath, commit + 1, timestamp);
 
         try {
+          // Ensure the file exists before adding it to Git
+          if (!fs.existsSync(filePath)) {
+            console.error(chalk.red(`❌ File not found: ${filePath}`));
+            continue; // Skip this commit
+          }
+
           // Stage and commit changes
           await git.add(filePath);
           await git.commit(commitMessage, filePath, { "--date": timestamp });
@@ -108,7 +114,7 @@ const writeFooter = (filePath) => {
         }
 
         // Delay to avoid overlapping Git processes
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 100)); // Increased delay
       }
     }
 
