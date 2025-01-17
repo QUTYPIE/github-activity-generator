@@ -2,7 +2,6 @@ const simpleGit = require("simple-git");
 const fs = require("fs");
 const path = require("path");
 const moment = require("moment-timezone");
-const chalk = require("chalk");
 
 // Configuration
 const CONFIG = {
@@ -11,13 +10,12 @@ const CONFIG = {
   BASE_DIR: path.join(__dirname, "src/main/base"), // Base directory
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
-  LOG_FORMAT: "c++", // File format: txt, json, md
 };
 
 // Ensure the base directory exists
 if (!fs.existsSync(CONFIG.BASE_DIR)) {
   fs.mkdirSync(CONFIG.BASE_DIR, { recursive: true });
-  console.log(chalk.green(`✅ Base directory created: ${CONFIG.BASE_DIR}`));
+  console.log(`✅ Base directory created: ${CONFIG.BASE_DIR}`);
 }
 
 const git = simpleGit();
@@ -25,7 +23,14 @@ const git = simpleGit();
 // Helper: Format timestamp in 12-hour format with AM/PM
 const formatTime = (date) => date.format("YYYY-MM-DD hh:mm:ss A");
 
-// Helper: Generate a folder name based on the current date
+// Helper: Convert a string into binary representation
+const stringToBinary = (text) =>
+  text
+    .split("")
+    .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
+    .join(" ");
+
+// Helper: Generate a folder name based on current date
 const generateFolderName = (date) => {
   const dayName = date.format("dddd"); // Day of the week
   const datePart = date.format("YYYY-MM-DD");
@@ -35,35 +40,30 @@ const generateFolderName = (date) => {
 // Helper: Generate a file name
 const generateFileName = (date) => {
   const timePart = date.format("hh-mm-ss_A");
-  return `${timePart}.${CONFIG.LOG_FORMAT}`;
+  return `${timePart}.c++`;
 };
 
-// Write header for Markdown
+// Write the header to the file with borders
 const writeHeader = (filePath) => {
-  const header =
-    CONFIG.LOG_FORMAT === "md"
-      ? `| Commit # | Timestamp           | Developer Name       |\n|----------|---------------------|----------------------|\n`
-      : "";
-  if (header) fs.writeFileSync(filePath, header, { flag: "w" });
+  const header = `
++-----------+---------------------+-------------------------------------------+----------------------+
+| Commit #  | Timestamp           | Binary Representation                     | Developer Name       |
++-----------+---------------------+-------------------------------------------+----------------------+\n`;
+  fs.writeFileSync(filePath, header, { flag: "w" });
 };
 
-// Append a commit row to the log file
+// Append a commit row to the file with borders
 const appendCommitRow = (filePath, commitNumber, timestamp) => {
-  const row =
-    CONFIG.LOG_FORMAT === "md"
-      ? `| ${commitNumber.toString().padEnd(8)} | ${timestamp.padEnd(
-          21
-        )} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`
-      : "";
-  if (row) fs.appendFileSync(filePath, row);
+  const thought = "Random commit message"; // Placeholder for any text
+  const binaryRepresentation = stringToBinary(thought).substring(0, 50) + "..."; // Limit binary length for readability
+  const row = `| ${commitNumber.toString().padEnd(9)} | ${timestamp.padEnd(21)} | ${binaryRepresentation.padEnd(41)} | ${CONFIG.DEVELOPER_NAME.padEnd(20)} |\n`;
+  fs.appendFileSync(filePath, row);
 };
 
-// Write footer for Markdown
+// Write the footer with the bottom border
 const writeFooter = (filePath) => {
-  if (CONFIG.LOG_FORMAT === "md") {
-    const footer = `|----------|---------------------|----------------------|\n`;
-    fs.appendFileSync(filePath, footer);
-  }
+  const footer = `+-----------+---------------------+-------------------------------------------+----------------------+\n`;
+  fs.appendFileSync(filePath, footer);
 };
 
 // Main execution
@@ -76,7 +76,7 @@ const writeFooter = (filePath) => {
     // Ensure today's folder exists
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath, { recursive: true });
-      console.log(chalk.green(`✅ Folder created: ${folderPath}`));
+      console.log(`✅ Folder created: ${folderPath}`);
     }
 
     const fileName = generateFileName(currentDate);
@@ -84,44 +84,37 @@ const writeFooter = (filePath) => {
 
     // Write the header to the log file
     writeHeader(filePath);
-    console.log(chalk.green(`✅ Log file initialized: ${filePath}`));
+    console.log(`✅ Log file initialized: ${filePath}`);
 
     for (let day = 0; day < CONFIG.DAYS; day++) {
       const commitDate = moment.tz(CONFIG.TIMEZONE).subtract(day, "days");
 
       for (let commit = 0; commit < CONFIG.COMMITS_PER_DAY; commit++) {
         const timestamp = formatTime(commitDate);
-        const commitMessage = `Automated Commit #: ${commit + 1} - ${timestamp}`;
 
-        // Append commit row to log file
+        // Append the commit to the log file
         appendCommitRow(filePath, commit + 1, timestamp);
 
-        try {
-          // Ensure the file exists before adding it to Git
-          if (!fs.existsSync(filePath)) {
-            console.error(chalk.red(`❌ File not found: ${filePath}`));
-            continue; // Skip this commit
-          }
+        const commitMessage = `Commit #: ${commit + 1} - ${timestamp}`;
 
+        try {
           // Stage and commit changes
           await git.add(filePath);
           await git.commit(commitMessage, filePath, { "--date": timestamp });
-          console.log(chalk.blue(`✅ Commit created: ${commitMessage}`));
+          console.log(`✅ Commit created: ${commitMessage}`);
         } catch (error) {
-          console.error(
-            chalk.red(`❌ Git error on commit #${commit + 1}:`, error.message)
-          );
+          console.error(`❌ Git error on commit #${commit + 1}:`, error.message);
         }
 
         // Delay to avoid overlapping Git processes
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Increased delay
+        await new Promise((resolve) => setTimeout(resolve, 50));
       }
     }
 
-    // Write footer to log file
+    // Write the footer to the log file
     writeFooter(filePath);
-    console.log(chalk.yellow("✨ All commits successfully logged!"));
+    console.log("✨ All commits successfully logged!");
   } catch (error) {
-    console.error(chalk.red("❌ Error during execution:", error.message));
+    console.error("❌ Error during execution:", error.message);
   }
 })();
