@@ -11,7 +11,7 @@ const CONFIG = {
   BASE_DIR: path.join(__dirname, "src/main/base"), // Base directory
   TIMEZONE: "Asia/Kolkata", // Timezone
   DEVELOPER_NAME: "₦ł₵₭ ₣ɄⱤɎ 🛠️", // Developer's name
-  LOG_FORMAT: "md", // File format: txt, json, md
+  LOG_FORMAT: "c++", // File format: txt, json, md
 };
 
 // Ensure the base directory exists
