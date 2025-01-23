@@ -141,7 +141,7 @@ const getFormattedDate = (date) => date.toISOString().replace('T', ' ').substrin
 
 ## 📜 License
 
-This project is licensed under the [ISC License](LICENSE). Feel free to use, modify, and distribute it as you wish.
+This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as you wish.
 
 ---
 
